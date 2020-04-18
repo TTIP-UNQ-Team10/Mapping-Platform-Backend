@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn} from "typeorm";
 import { Coordinate } from "./Coordinate";
 
 @Entity('Necessity')
@@ -8,7 +8,7 @@ export class Necessity {
     id: number;
     
     @Column()
-    name: number;
+    name: string;
 
     @Column()
     mappingName: string;
@@ -28,13 +28,14 @@ export class Necessity {
     @Column()
     phone: string;
 
-    @Column()
+    @Column({ nullable: true })
     website: string;
 
     @Column()
     postalCode: string;
 
-    @OneToMany( type => Coordinate , coordinate => coordinate.necessity)
-    coordinates: Coordinate[];
+    @OneToOne( type => Coordinate, coordinate => coordinate.necessity, { eager: true })
+    @JoinColumn()
+    coordinate: Coordinate;
 
 }

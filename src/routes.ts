@@ -1,14 +1,7 @@
-import {UserController} from "./controller/UserController";
 import { NecessityController } from "./controller/NecessityController";
 import { CoordinateController } from "./controller/CoordinateController";
 
 export const Routes = [
-    {
-        method: "get",
-        route: "/users",
-        controller: UserController,
-        action: "all"
-    },
     {
         method: "get",
         route: "/necessities",
@@ -20,12 +13,6 @@ export const Routes = [
         route: "/coordinates",
         controller: CoordinateController,
         action: "all"
-    }, 
-    {
-        method: "get",
-        route: "/users/:id",
-        controller: UserController,
-        action: "one"
     },
     {
         method: "get",
@@ -41,12 +28,6 @@ export const Routes = [
     },
     {
         method: "post",
-        route: "/users",
-        controller: UserController,
-        action: "save"
-    },
-    {
-        method: "post",
         route: "/necessities",
         controller: NecessityController,
         action: "save"
@@ -56,12 +37,6 @@ export const Routes = [
         route: "/coordinates",
         controller: CoordinateController,
         action: "save"
-    },
-    {
-        method: "delete",
-        route: "/users/:id",
-        controller: UserController,
-        action: "remove"
     },
     {
         method: "delete",

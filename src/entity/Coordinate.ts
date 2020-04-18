@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from "typeorm";
 import { Necessity } from "./Necessity";
 
 @Entity('Coordinate')
@@ -13,6 +13,6 @@ export class Coordinate {
     @Column()
     longitude: number;
 
-    @ManyToOne(type => Necessity, necessity => necessity.coordinates)
+    @OneToOne(type => Necessity, necessity => necessity.coordinate)
     necessity: Necessity;
 }
