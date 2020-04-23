@@ -1,5 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn} from "typeorm";
-import { Coordinate } from "./Coordinate";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity('Necessity')
 export class Necessity {
@@ -10,32 +9,31 @@ export class Necessity {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     mappingName: string;
 
     @Column()
     type: string;
 
-    @Column()
+    @Column({ nullable: true })
     address: string;
 
-    @Column()
+    @Column({ nullable: true })
     addressNumber: string;
 
     @Column()
     geolocationAddress: string;
 
-    @Column()
+    @Column({ nullable: true })
     phone: string;
 
     @Column({ nullable: true })
     website: string;
 
-    @Column()
+    @Column({ nullable: true })
     postalCode: string;
 
-    @OneToOne( type => Coordinate, coordinate => coordinate.necessity, { eager: true })
-    @JoinColumn()
-    coordinate: Coordinate;
+    @Column('simple-json')
+    coordinate: { latitude: number, longitude: number };
 
 }

@@ -2,7 +2,7 @@ import {MigrationInterface, QueryRunner} from "typeorm";
 import { Necessity } from "../entity/Necessity";
 import * as necessityData from './seedData/necessities.json';
 
-export class AddNecessities1587165038705 implements MigrationInterface {
+export class AddNecessities1587509055792 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
 
