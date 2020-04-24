@@ -5,6 +5,7 @@ import * as bodyParser from "body-parser";
 import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { Necessity } from "./entity/Necessity";
+var cors = require('cors');
 
 createConnection().then(async connection => {
 
@@ -12,6 +13,7 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express();
+    app.use(cors());
     app.use(bodyParser.json());
 
     // register express routes from defined application routes
@@ -19,7 +21,7 @@ createConnection().then(async connection => {
 
     app.get("/necessities", async (req: Request, res: Response) => {
         const necessities = await necessityRepository.find();
-        res.json(necessities);
+        return res.send(necessities);
     });
 
     app.get("/necessities/:id", async (req: Request, res: Response) => {
