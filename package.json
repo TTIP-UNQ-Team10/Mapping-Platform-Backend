@@ -18,11 +18,12 @@
       "typescript": "3.3.3333"
    },
    "dependencies": {
-      "typeorm": "0.2.24",
-      "reflect-metadata": "^0.1.10",
-      "mysql": "^2.14.1",
+      "body-parser": "^1.18.1",
+      "cors": "^2.8.5",
       "express": "^4.15.4",
-      "body-parser": "^1.18.1"
+      "mysql": "^2.14.1",
+      "reflect-metadata": "^0.1.10",
+      "typeorm": "0.2.24"
    },
    "scripts": {
       "start": "ts-node src/index.ts",

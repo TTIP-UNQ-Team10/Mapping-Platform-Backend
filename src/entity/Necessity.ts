@@ -1,5 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
-import { Coordinate } from "./Coordinate";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity('Necessity')
 export class Necessity {
@@ -8,33 +7,33 @@ export class Necessity {
     id: number;
     
     @Column()
-    name: number;
+    name: string;
 
-    @Column()
+    @Column({ nullable: true })
     mappingName: string;
 
     @Column()
     type: string;
 
-    @Column()
+    @Column({ nullable: true })
     address: string;
 
-    @Column()
+    @Column({ nullable: true })
     addressNumber: string;
 
     @Column()
     geolocationAddress: string;
 
-    @Column()
+    @Column({ nullable: true })
     phone: string;
 
-    @Column()
+    @Column({ nullable: true })
     website: string;
 
-    @Column()
+    @Column({ nullable: true })
     postalCode: string;
 
-    @OneToMany( type => Coordinate , coordinate => coordinate.necessity)
-    coordinates: Coordinate[];
+    @Column('simple-json')
+    coordinate: { latitude: number, longitude: number };
 
 }
