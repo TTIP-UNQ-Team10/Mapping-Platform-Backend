@@ -3,6 +3,19 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 @Entity('Necessity')
 export class Necessity {
 
+    constructor(name: string, mappingName: string = null, type: string, address: string = null, addressNumber: string = null, geolocationAddress: string, phone: string = null, website: string = null, postalCode: string = null, coordinate: { latitude: number, longitude: number }) {
+        this.name = name;
+        this.mappingName = mappingName;
+        this.type = type;
+        this.address = address;
+        this.addressNumber = addressNumber;
+        this.geolocationAddress = geolocationAddress;
+        this.phone = phone;
+        this.website = website;
+        this.postalCode = postalCode;
+        this.coordinate = coordinate;
+    }
+
     @PrimaryGeneratedColumn("uuid")
     id: number;
     
