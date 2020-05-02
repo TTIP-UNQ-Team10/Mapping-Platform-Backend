@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { createConnection, Connection } from 'typeorm';
+var cors = require('cors');
 
 class App {
     public app: express.Application;
@@ -23,6 +24,7 @@ class App {
 
     private initializeMiddlewares() {
         this.app.use(express.json());
+        this.app.use(cors());
     }
     
     private initializeControllers(controllers: any[]) {
@@ -34,7 +36,7 @@ class App {
     // Boots the application
     public listen() {
         this.app.listen(this.port, () => {
-            console.log(`Server running on port ${this.port}`);
+            console.log(`Express server has started on port ${this.port}. Base URL: http://localhost:${this.port}/`);
         });
     }
 }

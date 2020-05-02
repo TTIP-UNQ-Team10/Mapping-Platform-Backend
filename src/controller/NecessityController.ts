@@ -1,19 +1,17 @@
 import * as express from 'express';
-import * as typeorm from 'typeorm';
 import { Necessity } from '../entity/Necessity';
+import { getRepository } from 'typeorm';
 
 class NecessityController {
     public path = '/necessities';
     public router: express.Router = express.Router();
-    private necessityRepository = typeorm.getRepository(Necessity);
 
     constructor() {
         this.initializeRoutes();
     }
 
     public initializeRoutes() {
-        // UserController middleware
-        this.router.use(this.validateInput);
+        this.router.use(this.validateRequest);
 
         this.router.get(this.path, this.getAllNecessities);
         this.router.get(this.path + '/:id', this.getNecessity);
@@ -25,7 +23,7 @@ class NecessityController {
         this.router.delete(this.path + '/:id', this.deleteNecessity);
     }
 
-    public validateInput(req: express.Request, res: express.Response, next: express.NextFunction) {
+    public validateRequest(req: express.Request, res: express.Response, next: express.NextFunction) {
         //TODO: Refactor this to a strategy
         const params = {id: req.url.split('/')[2]};
         switch (req.method) {
@@ -50,28 +48,27 @@ class NecessityController {
 
         const necessity = new Necessity(necessityData.name, necessityData.mappingName, necessityData.type, necessityData.address, necessityData.addressNumber, necessityData.geolocationAddress, necessityData.phone, necessityData.website, necessityData.postalCode, necessityData.coordinate);
         
-        this.necessityRepository.save(necessity);
+        necessity.save();
 
         return res.send(necessity);
     }
 
     public async getAllNecessities (req: express.Request, res: express.Response) {
-        const necessities = await this.necessityRepository.find();
+        const necessities = await Necessity.find();
         return res.send(necessities);
     }
 
     public async getNecessity (req: express.Request, res: express.Response) {
-        const necessity =  await this.necessityRepository.findOne(req.params.id);
+        const necessity =  await Necessity.findOne(req.params.id);
         return res.send(necessity);
     }
 
 
 
     public async updateNecessity(req: express.Request, res: express.Response) {
-        const necessity = await this.necessityRepository.findOne(req.params.id);
+        const necessity = await Necessity.findOne(req.params.id);
         if (necessity !== undefined) {
-            this.necessityRepository.merge(necessity, req.body);
-            const results = await this.necessityRepository.save(necessity);
+            const results = await Necessity.update(req.params.id, req.body);
             return res.status(200).send({ message: `Necessity updated correctly! Results: ${results}`});
         }
 
@@ -79,7 +76,7 @@ class NecessityController {
     }
 
     public async deleteNecessity(req: express.Request, res: express.Response) {
-        const results = await this.necessityRepository.delete(req.params.id);
+        const results = await Necessity.delete(req.params.id);
         return res.status(200).send({ message: `Necessity deleted successfully! Results: ${results}`});
     }
 }
