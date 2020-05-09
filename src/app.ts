@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { createConnection, Connection } from 'typeorm';
+import * as helmet from 'helmet';
 var cors = require('cors');
 
 class App {
@@ -25,6 +26,7 @@ class App {
     private initializeMiddlewares() {
         this.app.use(express.json());
         this.app.use(cors());
+        this.app.use(helmet());
     }
     
     private initializeControllers(controllers: any[]) {

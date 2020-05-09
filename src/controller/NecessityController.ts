@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { Necessity } from '../entity/Necessity';
+import { checkJwt } from "../middlewares/checkJwt";
 import Controller from './Controller';
 
 class NecessityController extends Controller {
@@ -13,14 +14,14 @@ class NecessityController extends Controller {
     public initializeRoutes() {
         this.router.use(this.validateRequest);
 
-        this.router.get(this.path, this.getAll);
-        this.router.get(this.path + '/:id', this.get);
+        this.router.get(this.path, [checkJwt], this.getAll);
+        this.router.get(this.path + '/:id', [checkJwt], this.get);
         
-        this.router.post(this.path, this.create);
+        this.router.post(this.path, [checkJwt], this.create);
 
-        this.router.put(this.path + '/:id', this.update);
+        this.router.put(this.path + '/:id', [checkJwt], this.update);
 
-        this.router.delete(this.path + '/:id', this.delete);
+        this.router.delete(this.path + '/:id', [checkJwt], this.delete);
     }
 
     public async create (req: express.Request, res: express.Response) {
@@ -28,7 +29,7 @@ class NecessityController extends Controller {
 
         const necessity = new Necessity(necessityData.name, necessityData.mappingName, necessityData.type, necessityData.address, necessityData.addressNumber, necessityData.geolocationAddress, necessityData.phone, necessityData.website, necessityData.postalCode, necessityData.coordinate);
         
-        necessity.save();
+        await necessity.save();
 
         return res.send(necessity);
     }
