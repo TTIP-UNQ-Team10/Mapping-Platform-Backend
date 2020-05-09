@@ -24,19 +24,19 @@ class AuthController {
     {
         //Check if email and password are set
         let { email, password } = req.body;
-        
+
         if (!(email && password)) {
             return res.status(400).send({ message: 'email and password are required'});
         }
 
         let user: User;
-        
+
         try {
             user = await User.findOne({ email: email });
         } catch (error) {
             return res.status(401).send({ message: 'requested user does not exist'});
           }
-        
+
         //Check if encrypted password match
         if (!user.checkIfUnencryptedPasswordIsValid(password)) {
             res.status(401).send({ message: 'password does not match'});
@@ -50,7 +50,7 @@ class AuthController {
             { expiresIn: "1h" }
         );
 
-        return res.send(token);
+        return res.status(200).send({ token: token });
     }
 
     public async changePassword (req: express.Request, res: express.Response) {
