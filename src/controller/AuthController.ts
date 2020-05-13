@@ -80,8 +80,7 @@ class AuthController {
         const errors = await validate(user);
 
         if (errors.length > 0) {
-            res.status(400).send(errors);
-            return;
+            return res.status(400).send(errors);
         }
 
         //Hash the new password and save

@@ -34,10 +34,7 @@ class UserController extends Controller {
 
         const errors = await validate(user);
         
-        if (errors.length > 0) {
-            res.status(400).send(errors);
-            return;
-        }
+        Controller.checkClassValidatorErrors(res, errors);
 
         //Hash the password, to securely store on DB
         user.hashPassword();
@@ -89,10 +86,8 @@ class UserController extends Controller {
         //Validate the new values on model
         user.email = email;
         const errors = await validate(user);
-        if (errors.length > 0) {
-            res.status(400).send(errors);
-            return;
-        }
+        
+        Controller.checkClassValidatorErrors(res, errors);
 
         //Try to safe, if fails, that means username already in use
         try {
