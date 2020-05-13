@@ -30,6 +30,12 @@ abstract class Controller {
         next();
     }
 
+    public static checkClassValidatorErrors(res, errors) {
+        if (errors.length > 0) {
+            return res.status(400).send(errors);
+        }
+    }
+
     public abstract async create (req: express.Request, res: express.Response);
 
     public abstract async getAll (req: express.Request, res: express.Response);
