@@ -42,11 +42,10 @@ class UserController extends Controller {
         try {
             await user.save();
         } catch (e) {
-            res.status(409).send({ message: "email already in use" });
-            return;
+            return res.status(409).send({ message: "Email already in use" });
         }
 
-        return res.status(201).send({ message: "user created" });
+        return res.status(201).send({ message: "User created!" });
     }
 
     public async getAll (req: express.Request, res: express.Response) {
@@ -64,10 +63,10 @@ class UserController extends Controller {
         try {
             user = await User.findOneOrFail({ id }, { select: ["id", "email", "phone"] });
         } catch (error) {
-            res.status(404).send({ message: "User not found" });
+            return res.status(404).send({ message: "User not found" });
         }
 
-        return res.send(user);
+        return res.status(200).send(user);
     }
 
     public async update(req: express.Request, res: express.Response) {
@@ -79,8 +78,7 @@ class UserController extends Controller {
         try {
             user = await User.findOneOrFail(id);
         } catch (error) {
-            res.status(404).send({ message: "user not found" });
-            return;
+            return res.status(404).send({ message: "User not found" });
         }
 
         //Validate the new values on model
@@ -89,15 +87,14 @@ class UserController extends Controller {
         
         Controller.checkClassValidatorErrors(res, errors);
 
-        //Try to safe, if fails, that means username already in use
         try {
             await user.save();
         } catch (e) {
-            res.status(409).send({ message: "username already in use" });
+            res.status(409).send({ message: "Email already in use" });
             return;
         }
 
-        return res.status(204).send({ message: 'user updated!' });
+        return res.status(204).send({ message: 'User updated!' });
     }
 
     public async delete(req: express.Request, res: express.Response) {
@@ -107,13 +104,11 @@ class UserController extends Controller {
         try {
             user = await User.findOneOrFail(id);
         } catch (error) {
-            res.status(404).send({ message: "user not found" });
-            return;
+            return res.status(404).send({ message: "User not found" });
         }
         User.delete(id);
 
-        //After all send a 204 (no content, but accepted) response
-        res.status(204).send({ message: "user deleted!" });
+        return res.status(204).send({ message: "User deleted!" });
     }
 }
 

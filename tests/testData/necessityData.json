@@ -1,12 +1,12 @@
 {
-    "Id": 1.0,
-    "Name": "HOSPITAL GENERAL DE NIÑOS PEDRO DE ELIZALDE",
-    "MappingName": "HOSP. DE ELIZALDE",
-    "Type": "Hospital de niños",
-    "Address": "MANUEL A. MONTES DE OCA",
-    "AddressNumber": "40",
-    "GeolocationAddress": "40 MONTES DE OCA, MANUEL AV.",
-    "Phone": "4307-5842 \/ 5844",
-    "Website": "www.elizalde.gov.ar",
-    "PostalCode": "C1270AAN"
+    "id": 1.0,
+    "name": "HOSPITAL GENERAL DE NIÑOS PEDRO DE ELIZALDE",
+    "mappingName": "HOSP. DE ELIZALDE",
+    "type": "Hospital de niños",
+    "address": "MANUEL A. MONTES DE OCA",
+    "addressNumber": "40",
+    "geolocationAddress": "40 MONTES DE OCA, MANUEL AV.",
+    "phone": "4307-5842 \/ 5844",
+    "website": "www.elizalde.gov.ar",
+    "postalCode": "C1270AAN"
 }
