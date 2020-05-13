@@ -34,9 +34,7 @@ class UserController extends Controller {
 
         const errors = await validate(user);
         
-        if (errors.length > 0) {
-            return res.status(400).send(errors);
-        }
+        Controller.checkClassValidatorErrors(res, errors);
 
         //Hash the password, to securely store on DB
         user.hashPassword();
@@ -87,9 +85,7 @@ class UserController extends Controller {
         user.email = email;
         const errors = await validate(user);
         
-        if (errors.length > 0) {
-            return res.status(400).send(errors);
-        }
+        Controller.checkClassValidatorErrors(res, errors);
 
         try {
             await user.save();
