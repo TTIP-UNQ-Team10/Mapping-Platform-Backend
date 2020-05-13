@@ -14,7 +14,7 @@ class NecessityController extends Controller {
     public initializeRoutes() {
         this.router.use(this.validateRequest);
 
-        this.router.get(this.path, [checkJwt], this.getAll);
+        this.router.get(this.path, this.getAll);
         this.router.get(this.path + '/:id', [checkJwt], this.get);
         
         this.router.post(this.path, [checkJwt], this.create);
@@ -25,40 +25,53 @@ class NecessityController extends Controller {
     }
 
     public async create (req: express.Request, res: express.Response) {
-        const necessityData = req.body;
+        try {
+            const necessityData = req.body;
 
-        const necessity = new Necessity(necessityData.name, necessityData.mappingName, necessityData.type, necessityData.address, necessityData.addressNumber, necessityData.geolocationAddress, necessityData.phone, necessityData.website, necessityData.postalCode, necessityData.coordinate);
+            const necessity = new Necessity(necessityData.name, necessityData.mappingName, necessityData.type, necessityData.address, necessityData.addressNumber, necessityData.geolocationAddress, necessityData.phone, necessityData.website, necessityData.postalCode, necessityData.coordinate);
         
-        await necessity.save();
+            await Necessity.save(necessity);
 
-        return res.send(necessity);
+            return res.send(necessity);
+        } catch (error) {
+            return res.status(500).send({ message: 'An error occurred when trying to create a necessity', error: error })
+        }
     }
 
     public async getAll (req: express.Request, res: express.Response) {
-        const necessities = await Necessity.find();
-        return res.send(necessities);
+        try {
+            const necessities = await Necessity.find();
+            return res.send(necessities);
+        } catch (error) {
+            return res.status(500).send({ message: 'An error occurred when trying to retrieve all the necessities', error: error })
+        }
     }
 
     public async get (req: express.Request, res: express.Response) {
-        const necessity =  await Necessity.findOne(req.params.id);
-        return res.send(necessity);
+        try {
+            const necessity = await Necessity.findOneOrFail(req.params.id);
+            return res.send(necessity);
+        } catch (error) {
+            return res.status(404).send({ message: 'Requested necessity does not exist'});
+        }
     }
 
 
 
     public async update(req: express.Request, res: express.Response) {
         const necessity = await Necessity.findOne(req.params.id);
+        
         if (necessity !== undefined) {
-            const results = await Necessity.update(req.params.id, req.body);
-            return res.status(200).send({ message: `Necessity updated correctly! Results: ${results}`});
+            await Necessity.update(req.params.id, req.body);
+            return res.status(200).send({ message: 'Necessity updated correctly!'});
         }
 
         return res.status(404).send({ message: 'Necessity not found'});
     }
 
     public async delete(req: express.Request, res: express.Response) {
-        const results = await Necessity.delete(req.params.id);
-        return res.status(200).send({ message: `Necessity deleted successfully! Results: ${results}`});
+        await Necessity.delete(req.params.id);
+        return res.status(200).send({ message: 'Necessity deleted successfully!'});
     }
 }
 
