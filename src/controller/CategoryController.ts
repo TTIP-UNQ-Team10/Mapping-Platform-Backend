@@ -3,6 +3,7 @@ import Controller from './Controller';
 import { checkJwt } from "../middlewares/checkJwt";
 import { validate } from "class-validator";
 import { Category } from '../entity/Category';
+import { NecessityType } from '../entity/NecessityType';
 
 class CategoryController extends Controller {
     public path = '/categories';
@@ -25,11 +26,11 @@ class CategoryController extends Controller {
     }
 
     public async create (req: express.Request, res: express.Response) {
-        let { name, subCategory  } = req.body;
+        let { name, necessityType  } = req.body;
         
         let category = new Category();
         category.name = name;
-        category.subCategory = subCategory;
+        category.necessityType = await NecessityType.findByName(necessityType);
 
         const errors = await validate(category);
         
@@ -38,18 +39,18 @@ class CategoryController extends Controller {
         try {
             await category.save();
         } catch (e) {
-            return res.status(409).send({ message: "Category name already exists" });
+            return res.status(409).send({ message: "Category name already exists", error: e });
         }
 
-        return res.status(201).send({ message: "Category created" });
+        return res.status(201).send(category);
     }
 
     public async getAll (req: express.Request, res: express.Response) {
         const categories = await Category.find({
-            select: ["id", "name", "subCategory"]
+            select: ["id", "name", "necessityType"]
         });
 
-        return res.send(categories);
+        return res.status(200).send(categories);
     }
 
     public async get (req: express.Request, res: express.Response) {
@@ -57,18 +58,18 @@ class CategoryController extends Controller {
         let category;
 
         try {
-            category = await Category.findOneOrFail({ id }, { select: ["id", "name", "subCategory"] });
+            category = await Category.findOneOrFail({ id }, { select: ["id", "name", "necessityType"] });
         } catch (error) {
             return res.status(404).send({ message: "Category not found" });
         }
 
-        return res.send(category);
+        return res.status(200).send(category);
     }
 
     public async update(req: express.Request, res: express.Response) {
         const id = req.params.id;
 
-        const { name, subCategory } = req.body;
+        const { name } = req.body;
 
         let category;
         try {
@@ -78,7 +79,6 @@ class CategoryController extends Controller {
         }
 
         category.name = name;
-        category.subCategory = subCategory;
 
         const errors = await validate(category);
         
@@ -89,11 +89,10 @@ class CategoryController extends Controller {
         try {
             await category.save();
         } catch (e) {
-            res.status(409).send({ message: "Category name already in use" });
-            return;
+            return res.status(409).send({ message: "Category name already in use" });
         }
 
-        return res.status(204).send({ message: 'Category updated!' });
+        return res.status(204).send(category);
     }
 
     public async delete(req: express.Request, res: express.Response) {
@@ -104,6 +103,10 @@ class CategoryController extends Controller {
             category = await Category.findOneOrFail(id);
         } catch (error) {
             return res.status(404).send({ message: "Category not found" });
+        }
+
+        if (category.associatedNecessities.length > 0) {
+            return res.status(400).send({ message: `Cannot delete this category. There are necessities associated to this category. Necessities: ${JSON.stringify(category.associatedNecessities)}` });
         }
         
         Category.delete(id);
