@@ -6,16 +6,14 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   //Get the jwt token from the head
   const token = <string>req.headers["auth"];
   let jwtPayload;
-  
+
   try {
     jwtPayload = <any>jwt.verify(token, config.jwtSecret);
-    
+
     res.locals.jwtPayload = jwtPayload;
   } catch (error) {
     //If token is not valid, respond with 401 (unauthorized)
-    res.status(401).send({ message: 'user is not authorized to access this resource' });
-    
-    return;
+    return res.status(401).send({ error: error, message: 'user is not authorized to access this resource' });
   }
 
   //The token is valid for 1 hour
