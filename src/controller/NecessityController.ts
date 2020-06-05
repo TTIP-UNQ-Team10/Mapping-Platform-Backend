@@ -89,6 +89,17 @@ class NecessityController extends Controller {
         const necessity = await Necessity.findOne(req.params.id);
         
         if (necessity !== undefined) {
+            if (req.body.category) {
+                const aCategory = await Category.findByName(req.body.category);
+    
+                if (aCategory) {
+                    this.handleCategoryUpdate(req, necessity, aCategory);
+                }
+                else {
+                    return res.status(404).send({ message: 'The category requested was not found'});
+                }
+            }
+
             await Necessity.update(req.params.id, req.body);
             return res.status(200).send(necessity);
         }
@@ -99,6 +110,12 @@ class NecessityController extends Controller {
     public async delete(req: express.Request, res: express.Response) {
         await Necessity.delete(req.params.id);
         return res.status(200).send({ message: 'Necessity deleted successfully!'});
+    }
+
+    public async handleCategoryUpdate(req, necessity, aCategory) {
+        await Necessity.createQueryBuilder().relation(Necessity, "category").of(necessity).add(aCategory);
+    
+        delete req.body.category
     }
 }
 
