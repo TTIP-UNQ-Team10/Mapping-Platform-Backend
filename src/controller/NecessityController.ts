@@ -34,10 +34,13 @@ class NecessityController extends Controller {
 
             const necessity = new Necessity();
 
+            const type = await NecessityType.findByName(necessityData.type);
+            const category = await Category.findByName(necessityData.category);
+
             necessity.name = necessityData.name;
-            necessity.type = await NecessityType.findByName(necessityData.type);
+            necessity.type = type;
             necessity.description = necessityData.description;
-            necessity.category = await Category.findByName(necessityData.category);
+            necessity.category = category;
             necessity.location = necessityData.location;
 
             const errors = await validate(necessity);
@@ -64,11 +67,10 @@ class NecessityController extends Controller {
 
     public async getAllByCategory (req: express.Request, res: express.Response) {
         try {
-            const necessities = await Necessity.find();
+            const category = await Category.findByName(req.params.category);
+            const necessities = await Necessity.find({ relations: ["category"], where: { category: category } });
 
-            const filteredNecessities = necessities.filter(necessity => necessity.category.name === req.params.category);
-
-            return res.status(200).send(filteredNecessities);
+            return res.status(200).send(necessities);
         } catch (error) {
             return res.status(500).send({ message: 'An error occurred when trying to retrieve all the necessities by category', error: error.message })
         }
@@ -94,6 +96,7 @@ class NecessityController extends Controller {
     
                 if (aCategory) {
                     this.handleCategoryUpdate(req, necessity, aCategory);
+                    await Necessity.save(necessity);
                 }
                 else {
                     return res.status(404).send({ message: 'The category requested was not found'});
@@ -113,7 +116,7 @@ class NecessityController extends Controller {
     }
 
     public async handleCategoryUpdate(req, necessity, aCategory) {
-        await Necessity.createQueryBuilder().relation(Necessity, "category").of(necessity).add(aCategory);
+        necessity.category = aCategory;
     
         delete req.body.category
     }

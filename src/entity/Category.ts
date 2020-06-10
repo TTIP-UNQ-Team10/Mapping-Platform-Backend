@@ -13,7 +13,7 @@ export class Category extends BaseEntity {
     @Length(4, 100)
     name: string;
 
-    @ManyToOne(type => NecessityType, necessityType => necessityType.categories)
+    @ManyToOne(type => NecessityType, necessityType => necessityType.categories, { nullable: true })
     necessityType: NecessityType;
 
     @OneToMany(type => Necessity, necessity => necessity.category, { nullable: true })

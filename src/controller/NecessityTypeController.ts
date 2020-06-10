@@ -30,14 +30,20 @@ class NecessityTypeController extends Controller {
         try {
             const necessityTypeData = req.body;
 
-            const categoriesFromRequest = req.body.categories;
+            const categoryNamesFromRequest = req.body.categories;
             const necessityType = new NecessityType();
 
-            if (categoriesFromRequest) {
-                await this.addCategoriesToNecessityType(categoriesFromRequest, necessityType);
+            const categoriesArray = []
+
+            if (categoryNamesFromRequest) {
+                await Promise.all(categoryNamesFromRequest.map(async (categoryName) => {
+                    const newCategory = await Category.findByName(categoryName);
+                    categoriesArray.push(newCategory);
+                }));
             }
 
             necessityType.name = necessityTypeData.name;
+            necessityType.categories = categoriesArray;
         
             await NecessityType.save(necessityType);
 
@@ -45,14 +51,6 @@ class NecessityTypeController extends Controller {
         } catch (error) {
             return res.status(500).send({ message: 'An error occurred when trying to create a necessity type', error: error.message })
         }
-    }
-
-    public async addCategoriesToNecessityType(categoriesFromRequest: any, necessityType: NecessityType) {
-        await Promise.all(categoriesFromRequest.map(async (category) => {
-            const newCategory = await Category.findByName(category.name);
-            if (newCategory)
-                await NecessityType.createQueryBuilder().relation(NecessityType, "categories").of(necessityType).add(newCategory);
-        }));
     }
 
     public async getAll (req: express.Request, res: express.Response) {
@@ -96,8 +94,9 @@ class NecessityTypeController extends Controller {
         necessityType.name = name;
         
         const newCategoryToAdd = await Category.findByName(category);
+        
         if (newCategoryToAdd) {
-            await this.addCategoryToNecessityTypeCategories(necessityType, newCategoryToAdd);
+            necessityType.categories.push(newCategoryToAdd);
         }
 
         const errors = await validate(necessityType);
@@ -113,10 +112,6 @@ class NecessityTypeController extends Controller {
         }
 
         return res.status(204).send(necessityType);
-    }
-
-    public async addCategoryToNecessityTypeCategories(necessityType: NecessityType, newCategoryToAdd: Category) {
-        await NecessityType.createQueryBuilder().relation(NecessityType, "categories").of(necessityType).add(newCategoryToAdd);
     }
 
     public async delete(req: express.Request, res: express.Response) {

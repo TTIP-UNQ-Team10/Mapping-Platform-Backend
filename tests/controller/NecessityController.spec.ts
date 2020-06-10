@@ -124,6 +124,8 @@ describe('NecessityController', () => {
     sinon.stub(Category, "findByName").resolves(category)
     sinon.stub(NecessityController.prototype, 'handleCategoryUpdate').resolves()
 
+    sinon.stub(Necessity, 'save').resolves()
+
     const necessityController = new NecessityController()
 
     sinon.stub(Necessity, 'findOne').resolves(aNecessity)

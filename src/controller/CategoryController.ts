@@ -26,11 +26,10 @@ class CategoryController extends Controller {
     }
 
     public async create (req: express.Request, res: express.Response) {
-        let { name, necessityType  } = req.body;
+        let { name  } = req.body;
         
         let category = new Category();
         category.name = name;
-        category.necessityType = await NecessityType.findByName(necessityType);
 
         const errors = await validate(category);
         
@@ -47,7 +46,8 @@ class CategoryController extends Controller {
 
     public async getAll (req: express.Request, res: express.Response) {
         const categories = await Category.find({
-            select: ["id", "name", "necessityType"]
+            select: ["id", "name"],
+            relations: ["necessityType"]
         });
 
         return res.status(200).send(categories);
@@ -58,7 +58,7 @@ class CategoryController extends Controller {
         let category;
 
         try {
-            category = await Category.findOneOrFail({ id }, { select: ["id", "name", "necessityType"] });
+            category = await Category.findOneOrFail({ id }, { select: ["id", "name"], relations: ["necessityType"] });
         } catch (error) {
             return res.status(404).send({ message: "Category not found" });
         }
@@ -100,7 +100,7 @@ class CategoryController extends Controller {
 
         let category: Category;
         try {
-            category = await Category.findOneOrFail(id);
+            category = await Category.findOneOrFail({ id }, { relations: [ "associatedNecessities" ] });
         } catch (error) {
             return res.status(404).send({ message: "Category not found" });
         }

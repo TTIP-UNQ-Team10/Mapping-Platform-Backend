@@ -30,7 +30,7 @@ describe('NecessityTypeController', () => {
 
     necessityTypeData = {
       name: "dummyType",
-      categories: [category]
+      categories: [category.name]
     }
   })
 
@@ -59,7 +59,7 @@ describe('NecessityTypeController', () => {
 
     sandbox.stub(typeorm, 'getConnection').returns(fakeConnection as any)
 
-    sinon.stub(NecessityTypeController.prototype, 'addCategoriesToNecessityType').resolves()
+    sinon.stub(Category, "findByName").resolves(category)
 
     sinon.stub(NecessityType, 'save').resolves()
 
@@ -96,8 +96,6 @@ describe('NecessityTypeController', () => {
     sandbox.stub(typeorm, 'getConnection').returns(fakeConnection as any)
 
     sinon.stub(Category, "findByName").resolves(category)
-
-    sinon.stub(NecessityTypeController.prototype, 'addCategoryToNecessityTypeCategories').resolves()
 
     const necessityTypeController = new NecessityTypeController()
 

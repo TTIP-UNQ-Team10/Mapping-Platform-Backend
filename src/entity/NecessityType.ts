@@ -14,9 +14,9 @@ export class NecessityType extends BaseEntity {
     name: string;
 
     @OneToMany(type => Necessity, necessity => necessity.type, { nullable: true })
-    necessities: Necessity[]
+    necessities: Promise<Necessity[]>
 
-    @OneToMany(type => Category, category => category.necessityType, { nullable: true, eager: true })
+    @OneToMany(type => Category, category => category.necessityType, { nullable: true, eager: true, cascade: true })
     categories: Category[]
 
     static async findByName(name: string) {
