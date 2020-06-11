@@ -104,7 +104,8 @@ class NecessityController extends Controller {
             }
 
             await Necessity.update(req.params.id, req.body);
-            return res.status(200).send(necessity);
+            const newNecessity = await Necessity.findOne(req.params.id);
+            return res.status(200).send(newNecessity);
         }
 
         return res.status(404).send({ message: 'Necessity not found'});
