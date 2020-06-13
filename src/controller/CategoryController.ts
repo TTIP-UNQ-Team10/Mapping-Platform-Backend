@@ -27,12 +27,12 @@ class CategoryController extends Controller {
 
     public async create (req: express.Request, res: express.Response) {
         let { name  } = req.body;
-        
+
         let category = new Category();
         category.name = name;
 
         const errors = await validate(category);
-        
+
         Controller.checkClassValidatorErrors(res, errors);
 
         try {
@@ -81,7 +81,7 @@ class CategoryController extends Controller {
         category.name = name;
 
         const errors = await validate(category);
-        
+
         if (errors.length > 0) {
             return res.status(400).send(errors);
         }
@@ -92,7 +92,7 @@ class CategoryController extends Controller {
             return res.status(409).send({ message: "Category name already in use" });
         }
 
-        return res.status(204).send(category);
+        return res.status(201).send(category);
     }
 
     public async delete(req: express.Request, res: express.Response) {
@@ -108,7 +108,7 @@ class CategoryController extends Controller {
         if (category.associatedNecessities.length > 0) {
             return res.status(400).send({ message: `Cannot delete this category. There are necessities associated to this category. Necessities: ${JSON.stringify(category.associatedNecessities)}` });
         }
-        
+
         Category.delete(id);
 
         return res.status(204).send({ message: "Category deleted!" });
