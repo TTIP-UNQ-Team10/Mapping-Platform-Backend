@@ -68,10 +68,15 @@ class NecessityTypeController extends Controller {
         let necessityType: NecessityType;
 
         try {
-            necessityType = await NecessityType.findOneOrFail(id);
+            necessityType = await NecessityType.findOne(id);
+
+            if (!necessityType) {
+                return res.status(404).send({ message: 'Requested necessity type does not exist'});
+            }
+
             return res.status(200).send(necessityType);
         } catch (error) {
-            return res.status(404).send({ message: 'Requested necessity type does not exist'});
+            return res.status(500).send({ message: 'An error occurred when trying to retrieve a necessity type', error: error.message })
         }
     }
 
@@ -115,8 +120,13 @@ class NecessityTypeController extends Controller {
     }
 
     public async delete(req: express.Request, res: express.Response) {
-        await NecessityType.delete(req.params.id);
-        return res.status(200).send({ message: 'Necessity type deleted successfully!'});
+        try {
+            await NecessityType.delete(req.params.id);
+            return res.status(200).send({ message: 'Necessity type deleted successfully!'});
+        }
+        catch (error) {
+            return res.status(500).send({ message: "An error occurred while trying to delete the necessity type", error: error.message });
+        }
     }
 }
 
