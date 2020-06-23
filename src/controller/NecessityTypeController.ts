@@ -16,9 +16,9 @@ class NecessityTypeController extends Controller {
     public initializeRoutes() {
         this.router.use(this.validateRequest);
 
-        this.router.get(this.path, [checkJwt], this.getAll);
-        this.router.get(this.path + '/:id', [checkJwt], this.get);
-        
+        this.router.get(this.path, this.getAll);
+        this.router.get(this.path + '/:id', this.get);
+
         this.router.post(this.path, [checkJwt], this.create);
 
         this.router.put(this.path + '/:id', [checkJwt], this.update);
@@ -44,7 +44,7 @@ class NecessityTypeController extends Controller {
 
             necessityType.name = necessityTypeData.name;
             necessityType.categories = categoriesArray;
-        
+
             await NecessityType.save(necessityType);
 
             return res.status(201).send(necessityType);
@@ -90,28 +90,28 @@ class NecessityTypeController extends Controller {
         catch (e) {
             return res.status(404).send({ message: "Necessity type not found" });
         }
-        
+
         necessityType.name = name;
-        
+
         const newCategoryToAdd = await Category.findByName(category);
-        
+
         if (newCategoryToAdd) {
             necessityType.categories.push(newCategoryToAdd);
         }
 
         const errors = await validate(necessityType);
-        
+
         if (errors.length > 0) {
             return res.status(400).send(errors);
         }
-        
+
         try {
             await necessityType.save();
         } catch (e) {
             return res.status(500).send({ message: "An error occurred while trying to update the necessity type", error: e.message });
         }
 
-        return res.status(204).send(necessityType);
+        return res.status(200).send(necessityType);
     }
 
     public async delete(req: express.Request, res: express.Response) {

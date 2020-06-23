@@ -20,7 +20,8 @@ class NecessityController extends Controller {
         this.router.get(this.path, this.getAll);
         this.router.get(this.path + '/:category', this.getAllByCategory);
         this.router.get(this.path + '/:id', this.get);
-        
+        this.router.get(this.path + '/type/:necessityType', this.getAllByNecessityType)
+
         this.router.post(this.path, [checkJwt], this.create);
 
         this.router.put(this.path + '/:id', this.update);
@@ -44,9 +45,9 @@ class NecessityController extends Controller {
             necessity.location = necessityData.location;
 
             const errors = await validate(necessity);
-        
+
             Controller.checkClassValidatorErrors(res, errors);
-        
+
             await Necessity.save(necessity);
 
             return res.status(201).send(necessity);
@@ -89,11 +90,11 @@ class NecessityController extends Controller {
 
     public async update(req: express.Request, res: express.Response) {
         const necessity = await Necessity.findOne(req.params.id);
-        
+
         if (necessity !== undefined) {
             if (req.body.category) {
                 const aCategory = await Category.findByName(req.body.category);
-    
+
                 if (aCategory) {
                     this.handleCategoryUpdate(req, necessity, aCategory);
                     await Necessity.save(necessity);
@@ -118,8 +119,21 @@ class NecessityController extends Controller {
 
     public async handleCategoryUpdate(req, necessity, aCategory) {
         necessity.category = aCategory;
-    
+
         delete req.body.category
+    }
+
+
+    public async getAllByNecessityType(req: express.Request, res: express.Response) {
+      try {
+        const necessityType = await NecessityType.findByName(req.params.necessityType);
+        const necessities = await Necessity.find({ relations: ["type"], where: { type: necessityType } });
+
+        return res.status(200).send(necessities)
+
+      } catch (error) {
+        return res.status(500).send({ message: 'An error ocurred when trying to retrieve all the necessities by category', error: error.message })
+      }
     }
 }
 
