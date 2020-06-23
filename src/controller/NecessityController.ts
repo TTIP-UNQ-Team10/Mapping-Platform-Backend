@@ -22,7 +22,7 @@ class NecessityController extends Controller {
         this.router.get(this.path + '/:id', this.get);
         this.router.get(this.path + '/type/:necessityType', this.getAllByNecessityType)
 
-        this.router.post(this.path, [checkJwt], this.create);
+        this.router.post(this.path, this.create);
 
         this.router.put(this.path + '/:id', this.update);
 
