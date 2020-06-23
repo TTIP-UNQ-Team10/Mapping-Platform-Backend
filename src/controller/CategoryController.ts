@@ -17,8 +17,8 @@ class CategoryController extends Controller {
         this.router.use(this.validateRequest);
 
         this.router.post(this.path, [checkJwt], this.create);
-        this.router.get(this.path, [checkJwt], this.getAll);
-        this.router.get(this.path + '/:id', [checkJwt], this.get);
+        this.router.get(this.path, this.getAll);
+        this.router.get(this.path + '/:id', this.get);
 
         this.router.put(this.path + '/:id', [checkJwt], this.update);
 
@@ -92,7 +92,7 @@ class CategoryController extends Controller {
             return res.status(409).send({ message: "Category name already in use" });
         }
 
-        return res.status(201).send(category);
+        return res.status(200).send(category);
     }
 
     public async delete(req: express.Request, res: express.Response) {
@@ -111,7 +111,7 @@ class CategoryController extends Controller {
 
         Category.delete(id);
 
-        return res.status(204).send({ message: "Category deleted!" });
+        return res.status(200).send({ message: "Category deleted!" });
     }
 }
 
