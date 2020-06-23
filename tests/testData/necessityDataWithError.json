@@ -2,5 +2,5 @@
     "id": 1,
     "name": "HOSPITAL GENERAL DE NIÑOS PEDRO DE ELIZALDE",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi quis ultricies magna. Sed imperdiet nisi erat, ac laoreet ipsum imperdiet non.",
-    "location": { "type": "marker", "coordinates": [-31223213, 12352353], "properties": {} }
+    "location": {}
 }

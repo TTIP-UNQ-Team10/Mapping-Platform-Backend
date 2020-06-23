@@ -79,42 +79,57 @@ class NecessityController extends Controller {
 
     public async get (req: express.Request, res: express.Response) {
         try {
-            const necessity = await Necessity.findOneOrFail(req.params.id);
+            const necessity = await Necessity.findOne(req.params.id);
+
+            if (!necessity) {
+                return res.status(404).send({ message: 'Requested necessity does not exist'});
+            }
+
             return res.status(200).send(necessity);
         } catch (error) {
-            return res.status(404).send({ message: 'Requested necessity does not exist'});
+            return res.status(500).send({ message: 'An error occurred when trying to retrieve a necessity', error: error.message })
         }
     }
 
 
 
     public async update(req: express.Request, res: express.Response) {
-        const necessity = await Necessity.findOne(req.params.id);
-
-        if (necessity !== undefined) {
-            if (req.body.category) {
-                const aCategory = await Category.findByName(req.body.category);
-
-                if (aCategory) {
-                    this.handleCategoryUpdate(req, necessity, aCategory);
-                    await Necessity.save(necessity);
+        try {
+            const necessity = await Necessity.findOne(req.params.id);
+        
+            if (necessity !== undefined) {
+                if (req.body.category) {
+                    const aCategory = await Category.findByName(req.body.category);
+        
+                    if (aCategory) {
+                        this.handleCategoryUpdate(req, necessity, aCategory);
+                        await Necessity.save(necessity);
+                    }
+                    else {
+                        return res.status(404).send({ message: 'The category requested was not found'});
+                    }
                 }
-                else {
-                    return res.status(404).send({ message: 'The category requested was not found'});
-                }
+
+                await Necessity.update(req.params.id, req.body);
+                const newNecessity = await Necessity.findOne(req.params.id);
+                return res.status(200).send(newNecessity);
             }
 
-            await Necessity.update(req.params.id, req.body);
-            const newNecessity = await Necessity.findOne(req.params.id);
-            return res.status(200).send(newNecessity);
+            return res.status(404).send({ message: 'Necessity not found'});
         }
-
-        return res.status(404).send({ message: 'Necessity not found'});
+        catch (error) {
+            return res.status(500).send({ message: 'An error occurred when trying to update a necessity', error: error.message })
+        }
     }
 
     public async delete(req: express.Request, res: express.Response) {
-        await Necessity.delete(req.params.id);
-        return res.status(200).send({ message: 'Necessity deleted successfully!'});
+        try {
+            await Necessity.delete(req.params.id);
+            return res.status(200).send({ message: 'Necessity deleted successfully!'});
+        }
+        catch (error) {
+            return res.status(500).send({ message: 'An error occurred when trying to delete a necessity', error: error.message })
+        }
     }
 
     public async handleCategoryUpdate(req, necessity, aCategory) {
