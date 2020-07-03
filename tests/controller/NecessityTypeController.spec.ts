@@ -58,7 +58,7 @@ describe('NecessityTypeController', () => {
   it('when all necessity types are requested, an error is thrown and the controller returns an HTTP 500 error', async () => {
 
     const error = new Error('getAll error')
-    const expectedErrorMessage = { message: 'An error occurred when trying to retrieve all the necessity types', error: error.message }
+    const expectedErrorMessage = { message: 'Ha ocurrido un error al intentar obtener todos los tipos de necesidad disponibles', error: error.message }
     
     sinon.stub(NecessityType, 'find').throws(error)
     const necessityTypeController = new NecessityTypeController()
@@ -134,7 +134,7 @@ describe('NecessityTypeController', () => {
 
     const necessityTypeController = new NecessityTypeController()
 
-    const expectedResponse = { message: 'Requested necessity type does not exist'}
+    const expectedResponse = { message: 'El tipo de necesidad solicitado no existe'}
 
     sinon.stub(NecessityType, 'findOne').resolves(undefined)
 
@@ -165,7 +165,7 @@ describe('NecessityTypeController', () => {
 
     await necessityTypeController.update(updateRequest, updateResponse)
 
-    assert(updateResponse.status.calledWith(204))
+    assert(updateResponse.status.calledWith(200))
   })
 
   it('when a necessity type is requested to update its name and its category, the necessity type to update is not found and the controller returns an HTTP 404 not found error', async () => {
@@ -176,7 +176,7 @@ describe('NecessityTypeController', () => {
     const necessityTypeController = new NecessityTypeController()
 
     const error = new Error('necessity type not found')
-    const expectedResponse = { message: "Necessity type not found" }
+    const expectedResponse = { message: "El tipo de necesidad solicitado no fue encontrado" }
 
     sinon.stub(NecessityType, 'findOneOrFail').throws(error)
 
@@ -226,7 +226,7 @@ describe('NecessityTypeController', () => {
     deleteStub.resolves()
 
     const deleteRequest = mockRequest({ params: { id: 1 } })
-    const deleteResponse = mockResponse({ body: { message: 'Necessity type deleted successfully!' } })
+    const deleteResponse = mockResponse({ body: { message: 'El tipo de necesidad se ha eliminado con éxito' } })
 
     await necessityTypeController.delete(deleteRequest, deleteResponse)
 
@@ -242,7 +242,7 @@ describe('NecessityTypeController', () => {
     const necessityTypeController = new NecessityTypeController()
 
     const error = new Error('delete error')
-    const expectedResponse = { message: "An error occurred while trying to delete the necessity type", error: error.message }
+    const expectedResponse = { message: "Ha ocurrido un error al intentar eliminar el tipo de necesidad", error: error.message }
 
     sinon.stub(NecessityType, 'delete').throws(error)
 

@@ -52,7 +52,7 @@ class NecessityController extends Controller {
 
             return res.status(201).send(necessity);
         } catch (error) {
-            return res.status(500).send({ message: 'Ha ocurrido un error al crear la necesidad', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al crear una necesidad', error: error.message })
         }
     }
 
