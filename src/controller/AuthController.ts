@@ -26,7 +26,7 @@ class AuthController {
         let { email, password } = req.body;
 
         if (!(email && password)) {
-            return res.status(400).send({ message: 'Email and password are required'});
+            return res.status(400).send({ message: 'Email y contraseña son requeridos'});
         }
 
         let user: User;
@@ -34,12 +34,12 @@ class AuthController {
         try {
             user = await User.findOneOrFail({ email: email });
         } catch (error) {
-            return res.status(401).send({ message: 'Requested user does not exist'});
+            return res.status(401).send({ message: 'El usuario solicitado no existe'});
         }
 
         //Check if encrypted password match
         if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-            return res.status(401).send({ message: 'Password does not match'});
+            return res.status(401).send({ message: 'Contraseña inválida'});
         }
 
         //Sing JWT, valid for 1 hour

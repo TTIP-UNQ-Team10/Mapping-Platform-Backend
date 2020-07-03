@@ -17,14 +17,14 @@ abstract class Controller {
             case 'GET':
                 break;
             case 'DELETE':
-                if (!params.id) { return res.status(400).send({ message: 'Id is required'}); }
+                if (!params.id) { return res.status(400).send({ message: 'Id es requerido'}); }
                 break;
             case 'POST':
-                if (Object.keys(req.body).length === 0) { return res.status(400).send({ message: "Request body can't be empty"}); }
+                if (Object.keys(req.body).length === 0) { return res.status(400).send({ message: "El cuerpo de la solicitud no puede ser vacío"}); }
                 break;
             case 'PUT':
-                if (!params.id) { return res.status(400).send({ message: 'Id is required'}); }
-                if (Object.keys(req.body).length === 0) { return res.status(400).send({ message: "Request body can't be empty"}); }
+                if (!params.id) { return res.status(400).send({ message: 'Id es requerido'}); }
+                if (Object.keys(req.body).length === 0) { return res.status(400).send({ message: "El cuerpo de la solicitud no puede ser vacío"}); }
                 break;
         }
         next();

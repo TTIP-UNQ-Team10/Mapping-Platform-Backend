@@ -3,7 +3,6 @@ import Controller from './Controller';
 import { checkJwt } from "../middlewares/checkJwt";
 import { validate } from "class-validator";
 import { Category } from '../entity/Category';
-import { NecessityType } from '../entity/NecessityType';
 
 class CategoryController extends Controller {
     public path = '/categories';
@@ -38,7 +37,7 @@ class CategoryController extends Controller {
         try {
             await category.save();
         } catch (e) {
-            return res.status(409).send({ message: "Category name already exists", error: e });
+            return res.status(409).send({ message: "El nombre ingresado para crear la categoría ya existe", error: e });
         }
 
         return res.status(201).send(category);
@@ -60,7 +59,7 @@ class CategoryController extends Controller {
         try {
             category = await Category.findOneOrFail({ id }, { select: ["id", "name"], relations: ["necessityType"] });
         } catch (error) {
-            return res.status(404).send({ message: "Category not found" });
+            return res.status(404).send({ message: "No se encontró la categoría" });
         }
 
         return res.status(200).send(category);
@@ -75,7 +74,7 @@ class CategoryController extends Controller {
         try {
             category = await Category.findOneOrFail(id);
         } catch (error) {
-            return res.status(404).send({ message: "Category not found" });
+            return res.status(404).send({ message: "No se encontró la categoría" });
         }
 
         category.name = name;
@@ -89,7 +88,7 @@ class CategoryController extends Controller {
         try {
             await category.save();
         } catch (e) {
-            return res.status(409).send({ message: "Category name already in use" });
+            return res.status(409).send({ message: "El nombre ingresado para la categoría ya está en uso" });
         }
 
         return res.status(200).send(category);
@@ -102,16 +101,16 @@ class CategoryController extends Controller {
         try {
             category = await Category.findOneOrFail({ id }, { relations: [ "associatedNecessities" ] });
         } catch (error) {
-            return res.status(404).send({ message: "Category not found" });
+            return res.status(404).send({ message: "No se encontró la categoría" });
         }
 
         if (category.associatedNecessities.length > 0) {
-            return res.status(400).send({ message: `Cannot delete this category. There are necessities associated to this category. Necessities: ${JSON.stringify(category.associatedNecessities)}` });
+            return res.status(400).send({ message: `No se ha podido borrar esta categoría, ya que hay necesidades asociadas a ella. Necesidades: ${JSON.stringify(category.associatedNecessities)}` });
         }
 
         Category.delete(id);
 
-        return res.status(200).send({ message: "Category deleted!" });
+        return res.status(200).send({ message: "Categoría borrada con éxito" });
     }
 }
 
