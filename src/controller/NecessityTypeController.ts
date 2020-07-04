@@ -43,6 +43,11 @@ class NecessityTypeController extends Controller {
             }
 
             necessityType.name = necessityTypeData.name;
+
+            if (!necessityType.name) {
+                return res.status(400).send({ message: 'El campo Nombre es requerido' })
+            }
+
             necessityType.categories = categoriesArray;
 
             await NecessityType.save(necessityType);
