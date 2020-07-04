@@ -49,7 +49,7 @@ class NecessityTypeController extends Controller {
 
             return res.status(201).send(necessityType);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to create a necessity type', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al intentar crear un tipo de necesidad', error: error.message })
         }
     }
 
@@ -59,7 +59,7 @@ class NecessityTypeController extends Controller {
 
             return res.status(200).send(necessityTypes);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to retrieve all the necessity types', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al intentar obtener todos los tipos de necesidad disponibles', error: error.message })
         }
     }
 
@@ -71,12 +71,12 @@ class NecessityTypeController extends Controller {
             necessityType = await NecessityType.findOne(id);
 
             if (!necessityType) {
-                return res.status(404).send({ message: 'Requested necessity type does not exist'});
+                return res.status(404).send({ message: 'El tipo de necesidad solicitado no existe'});
             }
 
             return res.status(200).send(necessityType);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to retrieve a necessity type', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al intentar obtener el tipo de necesidad', error: error.message })
         }
     }
 
@@ -93,7 +93,7 @@ class NecessityTypeController extends Controller {
             necessityType = await NecessityType.findOneOrFail(id);
         }
         catch (e) {
-            return res.status(404).send({ message: "Necessity type not found" });
+            return res.status(404).send({ message: "El tipo de necesidad solicitado no fue encontrado" });
         }
 
         necessityType.name = name;
@@ -113,7 +113,7 @@ class NecessityTypeController extends Controller {
         try {
             await necessityType.save();
         } catch (e) {
-            return res.status(500).send({ message: "An error occurred while trying to update the necessity type", error: e.message });
+            return res.status(500).send({ message: "Ha ocurrido un error al intentar actualizar el tipo de necesidad", error: e.message });
         }
 
         return res.status(200).send(necessityType);
@@ -122,10 +122,10 @@ class NecessityTypeController extends Controller {
     public async delete(req: express.Request, res: express.Response) {
         try {
             await NecessityType.delete(req.params.id);
-            return res.status(200).send({ message: 'Necessity type deleted successfully!'});
+            return res.status(200).send({ message: 'El tipo de necesidad se ha eliminado con éxito'});
         }
         catch (error) {
-            return res.status(500).send({ message: "An error occurred while trying to delete the necessity type", error: error.message });
+            return res.status(500).send({ message: "Ha ocurrido un error al intentar eliminar el tipo de necesidad", error: error.message });
         }
     }
 }

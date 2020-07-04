@@ -52,7 +52,7 @@ class NecessityController extends Controller {
 
             return res.status(201).send(necessity);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to create a necessity', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al crear una necesidad', error: error.message })
         }
     }
 
@@ -62,7 +62,7 @@ class NecessityController extends Controller {
 
             return res.status(200).send(necessities);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to retrieve all the necessities', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al obtener todas las necesidades', error: error.message })
         }
     }
 
@@ -73,7 +73,7 @@ class NecessityController extends Controller {
 
             return res.status(200).send(necessities);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to retrieve all the necessities by category', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al obtener las necesidades en base a la categoría ingresada', error: error.message })
         }
     }
 
@@ -82,12 +82,12 @@ class NecessityController extends Controller {
             const necessity = await Necessity.findOne(req.params.id);
 
             if (!necessity) {
-                return res.status(404).send({ message: 'Requested necessity does not exist'});
+                return res.status(404).send({ message: 'La necesidad solicitada no existe'});
             }
 
             return res.status(200).send(necessity);
         } catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to retrieve a necessity', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al intentar obtener la necesidad', error: error.message })
         }
     }
 
@@ -106,7 +106,7 @@ class NecessityController extends Controller {
                         await Necessity.save(necessity);
                     }
                     else {
-                        return res.status(404).send({ message: 'The category requested was not found'});
+                        return res.status(404).send({ message: 'La categoría solicitada no fue encontrada'});
                     }
                 }
 
@@ -115,20 +115,20 @@ class NecessityController extends Controller {
                 return res.status(200).send(newNecessity);
             }
 
-            return res.status(404).send({ message: 'Necessity not found'});
+            return res.status(404).send({ message: 'No se encontró la necesidad'});
         }
         catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to update a necessity', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al intentar actualizar la necesidad', error: error.message })
         }
     }
 
     public async delete(req: express.Request, res: express.Response) {
         try {
             await Necessity.delete(req.params.id);
-            return res.status(200).send({ message: 'Necessity deleted successfully!'});
+            return res.status(200).send({ message: 'Necesidad borrada con éxito'});
         }
         catch (error) {
-            return res.status(500).send({ message: 'An error occurred when trying to delete a necessity', error: error.message })
+            return res.status(500).send({ message: 'Ha ocurrido un error al intentar borrar la necesidad', error: error.message })
         }
     }
 
@@ -147,7 +147,7 @@ class NecessityController extends Controller {
         return res.status(200).send(necessities)
 
       } catch (error) {
-        return res.status(500).send({ message: 'An error ocurred when trying to retrieve all the necessities by category', error: error.message })
+        return res.status(500).send({ message: 'Ha ocurrido un error al intentar obtener las necesidades en base al tipo de necesidad ingresado', error: error.message })
       }
     }
 }

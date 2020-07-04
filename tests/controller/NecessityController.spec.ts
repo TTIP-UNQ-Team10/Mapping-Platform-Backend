@@ -58,10 +58,44 @@ describe('NecessityController', () => {
     assert(getAllResponse.send.calledWith(necessitiesArray))
   })
 
+  it('when all necessities by category are requested, the controller returns all the necessities by category from the database', async () => {
+
+    const necessitiesArray: typeorm.BaseEntity[] = [aNecessity]
+
+    sinon.stub(Category, 'findByName').resolves(category)
+    
+    sinon.stub(Necessity, 'find').resolves(necessitiesArray)
+    const necessityController = new NecessityController()
+
+    const getAllRequest = mockRequest()
+    const getAllResponse = mockResponse()
+
+    await necessityController.getAllByCategory(getAllRequest, getAllResponse)
+
+    assert(getAllResponse.send.calledWith(necessitiesArray))
+  })
+
+  it('when all necessities by type are requested, the controller returns all the necessities by type from the database', async () => {
+
+    const necessitiesArray: typeorm.BaseEntity[] = [aNecessity]
+
+    sinon.stub(NecessityType, 'findByName').resolves(necessityType)
+    
+    sinon.stub(Necessity, 'find').resolves(necessitiesArray)
+    const necessityController = new NecessityController()
+
+    const getAllRequest = mockRequest()
+    const getAllResponse = mockResponse()
+
+    await necessityController.getAllByNecessityType(getAllRequest, getAllResponse)
+
+    assert(getAllResponse.send.calledWith(necessitiesArray))
+  })
+
   it('when all necessities are requested, an error is thrown and the controller returns an error', async () => {
 
     const anError = new Error('dummy error');
-    const expectedErrorResponse = { message: 'An error occurred when trying to retrieve all the necessities', error: anError.message }
+    const expectedErrorResponse = { message: 'Ha ocurrido un error al obtener todas las necesidades', error: anError.message }
     
     sinon.stub(Necessity, 'find').throws(anError)
     const necessityController = new NecessityController()
@@ -101,7 +135,7 @@ describe('NecessityController', () => {
     sandbox.stub(typeorm, 'getConnection').returns(fakeConnection as any)
 
     const thrownError = new Error('dummy error')
-    const expectedErrorResponse = { message: 'An error occurred when trying to create a necessity', error: thrownError.message }
+    const expectedErrorResponse = { message: 'Ha ocurrido un error al crear una necesidad', error: thrownError.message }
 
     sinon.stub(NecessityType, 'findByName').resolves(necessityType)
     sinon.stub(Category, 'findByName').resolves(category)
@@ -166,7 +200,7 @@ describe('NecessityController', () => {
 
     sandbox.stub(typeorm, 'getConnection').returns(fakeConnection as any)
 
-    const expectedErrorResponse = { message: 'Requested necessity does not exist'}
+    const expectedErrorResponse = { message: 'La necesidad solicitada no existe'}
 
     const necessityController = new NecessityController()
 
@@ -235,7 +269,7 @@ describe('NecessityController', () => {
 
     sinon.stub(Necessity, 'findOne').resolves(aNecessity)
 
-    const expectedErrorResponse = { message: 'The category requested was not found'}
+    const expectedErrorResponse = { message: 'La categoría solicitada no fue encontrada'}
 
     sinon.stub(Category, "findByName").resolves(undefined)
 
@@ -255,7 +289,7 @@ describe('NecessityController', () => {
 
     sandbox.stub(typeorm, 'getConnection').returns(fakeConnection as any)
     
-    const expectedErrorResponse = { message: 'Necessity not found'}
+    const expectedErrorResponse = { message: 'No se encontró la necesidad'}
 
     sinon.stub(Necessity, 'findOne').resolves(undefined)
 
@@ -289,7 +323,7 @@ describe('NecessityController', () => {
     deleteStub.resolves()
 
     const deleteRequest = mockRequest({ params: { id: 1 } })
-    const deleteResponse = mockResponse({ body: { message: 'Necessity deleted successfully!' } })
+    const deleteResponse = mockResponse({ body: { message: 'Necesidad borrada con éxito' } })
 
     await necessityController.delete(deleteRequest, deleteResponse)
 
@@ -303,7 +337,7 @@ describe('NecessityController', () => {
     sandbox.stub(typeorm, 'getConnection').returns(fakeConnection as any)
 
     const thrownError = new Error('delete error')
-    const expectedErrorResponse = { message: 'An error occurred when trying to delete a necessity', error: thrownError.message }
+    const expectedErrorResponse = { message: 'Ha ocurrido un error al intentar borrar la necesidad', error: thrownError.message }
 
     const necessityController = new NecessityController()
 

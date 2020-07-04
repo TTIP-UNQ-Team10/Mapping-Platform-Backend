@@ -42,10 +42,10 @@ class UserController extends Controller {
         try {
             await user.save();
         } catch (e) {
-            return res.status(409).send({ message: "Email already in use" });
+            return res.status(409).send({ message: "El e-mail ingresado ya se encuentra en uso" });
         }
 
-        return res.status(201).send({ message: "User created!" });
+        return res.status(201).send({ message: "Usuario creado!" });
     }
 
     public async getAll (req: express.Request, res: express.Response) {
@@ -63,7 +63,7 @@ class UserController extends Controller {
         try {
             user = await User.findOneOrFail({ id }, { select: ["id", "email", "phone"] });
         } catch (error) {
-            return res.status(404).send({ message: "User not found" });
+            return res.status(404).send({ message: "No se encontró el usuario" });
         }
 
         return res.status(200).send(user);
@@ -78,7 +78,7 @@ class UserController extends Controller {
         try {
             user = await User.findOneOrFail(id);
         } catch (error) {
-            return res.status(404).send({ message: "User not found" });
+            return res.status(404).send({ message: "No se encontró el usuario" });
         }
 
         //Validate the new values on model
@@ -90,11 +90,11 @@ class UserController extends Controller {
         try {
             await user.save();
         } catch (e) {
-            res.status(409).send({ message: "Email already in use" });
+            res.status(409).send({ message: "El e-mail ingresado ya se encuentra en uso" });
             return;
         }
 
-        return res.status(204).send({ message: 'User updated!' });
+        return res.status(204).send({ message: 'Usuario actualizado!' });
     }
 
     public async delete(req: express.Request, res: express.Response) {
@@ -104,11 +104,11 @@ class UserController extends Controller {
         try {
             user = await User.findOneOrFail(id);
         } catch (error) {
-            return res.status(404).send({ message: "User not found" });
+            return res.status(404).send({ message: "No se encontró el usuario" });
         }
         User.delete(id);
 
-        return res.status(204).send({ message: "User deleted!" });
+        return res.status(204).send({ message: "Usuario eliminado!" });
     }
 }
 
