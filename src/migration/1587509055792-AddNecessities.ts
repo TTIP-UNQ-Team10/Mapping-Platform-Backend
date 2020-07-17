@@ -17,7 +17,8 @@ export class AddNecessities1587509055792 implements MigrationInterface {
         .from(NecessityType, "necessityType")
         .getMany();
 
-        const necessityType = necessityTypes[0];
+        const hospitalesType = necessityTypes.find(nt => nt.name.includes("Hospitales"));
+        const aislamientoType = necessityTypes.find(nt => nt.name.includes("Aislamiento"));
 
         const categories = await queryRunner
         .manager
@@ -26,7 +27,8 @@ export class AddNecessities1587509055792 implements MigrationInterface {
         .from(Category, "category")
         .getMany();
 
-        const category = categories[0];
+        const saludCategory = categories.find(category => category.name.includes("Salud"));
+        const pandemiaCategory = categories.find(category => category.name.includes("Pandemia"));
 
         queryRunner
         .manager
@@ -44,33 +46,65 @@ export class AddNecessities1587509055792 implements MigrationInterface {
         .getMany();
 
         await Promise.all(necessities.map(async (necessity) => {
-            await queryRunner
-            .manager
-            .createQueryBuilder()
-            .relation(Necessity, "category")
-            .of(necessity.id)
-            .set(category);
 
-            await queryRunner
-            .manager
-            .createQueryBuilder()
-            .relation(Category, "associatedNecessities")
-            .of(category.id)
-            .add(necessity);
+            if (necessity.name.includes('Camas para COVID-19')) {
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(Necessity, "category")
+                .of(necessity.id)
+                .set(saludCategory);
 
-            await queryRunner
-            .manager
-            .createQueryBuilder()
-            .relation(Necessity, "type")
-            .of(necessity.id)
-            .set(necessityType);
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(Category, "associatedNecessities")
+                .of(saludCategory.id)
+                .add(necessity);
 
-            await queryRunner
-            .manager
-            .createQueryBuilder()
-            .relation(NecessityType, "necessities")
-            .of(necessityType.id)
-            .add(necessity);
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(Necessity, "type")
+                .of(necessity.id)
+                .set(hospitalesType);
+
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(NecessityType, "necessities")
+                .of(hospitalesType.id)
+                .add(necessity);
+            }
+            else {
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(Necessity, "category")
+                .of(necessity.id)
+                .set(pandemiaCategory);
+
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(Category, "associatedNecessities")
+                .of(pandemiaCategory.id)
+                .add(necessity);
+
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(Necessity, "type")
+                .of(necessity.id)
+                .set(aislamientoType);
+
+                await queryRunner
+                .manager
+                .createQueryBuilder()
+                .relation(NecessityType, "necessities")
+                .of(aislamientoType.id)
+                .add(necessity);
+            }
         }));
     }
 

@@ -9,6 +9,9 @@ export class AddNecessityTypes1587509055791 implements MigrationInterface {
         const data = [
             {
                 name: "Hospitales"
+            },
+            {
+                name: "Aislamiento"
             }
         ];
 
@@ -27,7 +30,8 @@ export class AddNecessityTypes1587509055791 implements MigrationInterface {
         .from(NecessityType, "necessityType")
         .getMany();
 
-        const necessityType = necessityTypes[0];
+        const hospitalesType = necessityTypes.find(nt => nt.name.includes("Hospitales"));
+        const aislamientoType = necessityTypes.find(nt => nt.name.includes("Aislamiento"));
 
         const categories = await queryRunner
         .manager
@@ -36,14 +40,22 @@ export class AddNecessityTypes1587509055791 implements MigrationInterface {
         .from(Category, "category")
         .getMany();
 
-        await Promise.all(categories.map(async (category) => {
-            await queryRunner
-            .manager
-            .createQueryBuilder()
-            .relation(NecessityType, "categories")
-            .of(necessityType.id)
-            .add(category);
-        }));
+        const saludCategory = categories.find(category => category.name.includes("Salud"));
+        const pandemiaCategory = categories.find(category => category.name.includes("Pandemia"));
+            
+        await queryRunner
+        .manager
+        .createQueryBuilder()
+        .relation(NecessityType, "categories")
+        .of(hospitalesType.id)
+        .add(saludCategory);
+            
+        await queryRunner
+        .manager
+        .createQueryBuilder()
+        .relation(NecessityType, "categories")
+        .of(aislamientoType.id)
+        .add(pandemiaCategory);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

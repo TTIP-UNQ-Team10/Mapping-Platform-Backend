@@ -7,13 +7,10 @@ export class AddCategories1587509055790 implements MigrationInterface {
 
         const data = [
             {
-                name: "Dengue"
+                name: "Salud"
             },
             {
-                name: "COVID-19"
-            },
-            {
-                name: "Vacuna Antigripal"
+                name: "Pandemia"
             }
         ];
 
